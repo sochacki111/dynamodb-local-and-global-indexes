@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  AlbumIndexedTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "album_indexed"
+      AttributeDefinitions:
+        - AttributeName: "artist_id"
+          AttributeType: "N"
+        - AttributeName: "id"
+          AttributeType: "N"
+        - AttributeName: "title"
+          AttributeType: "S"
+        - AttributeName: "format"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "artist_id"
+          KeyType: "HASH"
+        - AttributeName: "id"
+          KeyType: "RANGE"
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: "table-index"
+          KeySchema:
+            - AttributeName: "title"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+      LocalSecondaryIndexes:
+        - IndexName: "artist_id-format-index"
+          KeySchema:
+            - AttributeName: "artist_id"
+              KeyType: "HASH"
+            - AttributeName: "format"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
